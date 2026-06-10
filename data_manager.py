@@ -41,7 +41,7 @@ class DataManager():
         db.session.commit()
 
     def get_users(self):
-        data = User.query.get()
+        data = User.query.all()
         return data
     
     def get_movies(self, user_id):

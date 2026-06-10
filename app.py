@@ -14,9 +14,10 @@ db.init_app(app)  # Link the database and the app. This is the reason you need t
 data_manager = DataManager() # Create an object of your DataManager class
 
 
-@app.route('/')
-def home():
-    return "Welcome to MoviWeb App!"
+@app.route('/users')
+def list_users():
+    users = data_manager.get_users()
+    return str(users)  # Temporarily returning users as a string
 
 
 if __name__ == "__main__":
