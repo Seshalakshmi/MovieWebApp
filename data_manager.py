@@ -48,9 +48,18 @@ class DataManager():
         data = Movie.query.get(user_id)
         return data
     
-    def add_movie(self, name, director, year, poster_url, user_id):
-        new_movie = Movie(name=name, director=director, year=year, poster_url=poster_url, user_id=user_id)
+    def add_movie(self, name, user_id):
+        
+        fetch_movie_details = get_movie_details(name)
+        movie_title = fetch_movie_details.get('Title', 0)
+        movie_director = fetch_movie_details.get('Director', 0)
+        movie_year = fetch_movie_details.get('Year', 0)
+        movie_poster = fetch_movie_details.get('Poster',
+                                    "https://placehold.co/380x562?text=No+Poster")
+        
+        new_movie = Movie(name=movie_title, director=movie_director, year=movie_year, poster_url=movie_poster, user_id=user_id)
         db.session.add(new_movie)
         db.session.commit()
+
 
     
