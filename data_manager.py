@@ -1,4 +1,4 @@
-from models import db, User, Movie
+from models import db, User, Movie, UserMovies
 import requests
 import os
 from dotenv import load_dotenv
@@ -45,7 +45,7 @@ class DataManager():
         return data
     
     def get_movies(self, user_id):
-        data = Movie.query.get(user_id)
+        data = Movie.query.filter_by(user_id=user_id).all()
         return data
     
     def add_movie(self, name, user_id):
@@ -57,9 +57,32 @@ class DataManager():
         movie_poster = fetch_movie_details.get('Poster',
                                     "https://placehold.co/380x562?text=No+Poster")
         
-        new_movie = Movie(name=movie_title, director=movie_director, year=movie_year, poster_url=movie_poster, user_id=user_id)
+        new_movie = Movie(
+            name=movie_title, 
+            director=movie_director, 
+            year=movie_year, 
+            poster_url=movie_poster
+            )
         db.session.add(new_movie)
+        db.session.flush()
+
+        new_user_movie = UserMovies(
+            user_id=user_id, 
+            movie_id=new_movie.id
+            )
+
+        db.session.add(new_user_movie)
         db.session.commit()
 
 
-    
+    def update_movie(self, movie_id, new_title):
+        data = Movie.query.filter_by(id=movie_id).first()
+        data.name = new_title
+        db.session.commit()
+
+    def delete_movie(self, user_id, movie_id):
+        data = UserMovies.query.filter_by(
+            user_id=user_id, 
+            movie_id=movie_id).first()
+        db.session.delete(data)
+        db.session.commit()
