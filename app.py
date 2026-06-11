@@ -15,22 +15,22 @@ data_manager = DataManager() # Create an object of your DataManager class
 
 
 @app.route('/')
-def home():
+def index():
     users = data_manager.get_users()
-    return render_template('home.html', users=users) 
+    return render_template('index.html', users=users) 
 
 @app.route('/users', methods=["GET", "POST"])
-def list_users():
+def create_user():
     users = data_manager.get_users()
     if request.method == "POST":
         name = request.form.get('name')
         data_manager.create_user(name)
-        return redirect('home.html', users=users)
+        return redirect('index.html', users=users)
     elif request.method == "GET":
-        return render_template('home.html', users=users)
+        return render_template('index.html', users=users)
     
 @app.route('/users/<int:user_id>/movies', methods=["GET", "POST"])
-def get_and_add_movie_by_user_id(user_id):
+def get_movies(user_id):
     movies = data_manager.get_movies(user_id)
     if request.method == "post":
         movie_name = request.form.get('movie_name')
