@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <title>Movie Web App</title>
         <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     </head>
     <body>
         <h1> Movie Web App </h1>
         <nav>
-            
+            <a href="/">Home</a>
+            <a href="/movies">All Movies</a>
         </nav>
         <main class="container">
             {% block content %}{% endblock %}
-        </main>`
+        </main>
     </body>
 </html>

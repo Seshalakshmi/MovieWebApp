@@ -1,20 +1,44 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Movies</h1>
     <ul class="user-list">
         {% for movie in movies %}
-        <li> 
+        <li>
             <img src="{{ movie.poster_url }}" alt="No Poster">
-            Title: {{ movie.name }} <br>
-            Written by {{ movie.director }} 
-            year {{ movie.year }}
-            <a href="{{ url_for('update_movie_name', user_id=user.id, movie_id=id) }}" class="btn">Update</a>
-            <a href="{{ url_for('update_movie_name', user_id=user.id, movie_id=id) }}" class="btn">Delete</a>
+            <form method="post" class="movie-form">
+                
+                <div class="movie-info">
+                    <input type="text" name="name" value="{{ movie.name }}">
+
+                    <p><strong>Written by:</strong> {{ movie.director }}</p>
+                    <p><strong>Year:</strong> {{ movie.year }}</p>
+
+
+                    <div class="action-buttons">
+                        <button
+                            type="submit"
+                            formaction="{{ url_for('update_movie_name',
+                            user_id=user_id,
+                            movie_id=movie.id) }}">
+                            Update
+                        </button>
+
+                        <button
+                            type="submit"
+                            formaction="{{ url_for('delete_movie_by_user_id',
+                            user_id=user_id,
+                            movie_id=movie.id) }}"
+                            onclick="return confirm('Delete this movie?')">
+                            Delete
+                        </button>
+                    </div>
+                </div>
+
+            </form>
         </li>
         {% endfor %}
     </ul>
-    <form action="{{ url_for('create_user') }}" method="post">
+    <form action="{{ url_for('get_movies', user_id=user_id) }}" method="post">
         <label for="movie_name">Add Movie</label>
         <input type="text" name="movie_name">
         <button type="submit">Add</button>

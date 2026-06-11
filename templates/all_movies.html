@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <ul class="user-list">
+        {% for movie in movies %}
+        <li>
+            <img src="{{ movie.poster_url }}" alt="No Poster">
+            <form method="post" class="movie-form">
+                
+                <div class="movie-info">
+                    <h3>{{ movie.name }}</h3>
+                    <p><strong>Written by:</strong> {{ movie.director }}</p>
+                    <p><strong>Year:</strong> {{ movie.year }}</p>
+                </div>
+
+            </form>
+        </li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}

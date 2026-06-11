@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, redirect
+from flask import Flask, request, render_template, redirect, url_for
 from data_manager import DataManager
 from models import db
 import os
@@ -21,37 +21,41 @@ def index():
 
 @app.route('/users', methods=["GET", "POST"])
 def create_user():
-    users = data_manager.get_users()
     if request.method == "POST":
-        name = request.form.get('name')
+        name = request.form.get('user_name')
         data_manager.create_user(name)
-        return redirect('index.html', users=users)
-    elif request.method == "GET":
-        return render_template('index.html', users=users)
+        return redirect(url_for('index'))
+    
+    users = data_manager.get_users()
+    return render_template('index.html', users=users)
+
+@app.route('/movies')
+def get_all_movies():
+    movies = data_manager.get_all_movies()
+    return render_template('all_movies.html', movies=movies)
     
 @app.route('/users/<int:user_id>/movies', methods=["GET", "POST"])
 def get_movies(user_id):
-    movies = data_manager.get_movies(user_id)
-    if request.method == "post":
+    
+    if request.method == "POST":
         movie_name = request.form.get('movie_name')
         data_manager.add_movie(movie_name, user_id)
-        return redirect('movies.html', movies=movies)
-    elif request.method == "GET":
-        return render_template('movies.html', movies=movies)
+        return redirect(url_for('get_movies', user_id=user_id))
+    
+    movies = data_manager.get_movies(user_id)
+    return render_template('movies.html', movies=movies, user_id=user_id)
     
     
 @app.route('/users/<int:user_id>/movies/<int:movie_id>/update', methods=["POST"])
 def update_movie_name(user_id, movie_id):
-    movies = data_manager.get_movies(user_id)
-    movie_name = request.form.get('update_name')
+    movie_name = request.form.get('name')
     data_manager.update_movie(user_id, movie_id, movie_name)
-    return render_template('movies.html', movies=movies)
+    return redirect(url_for('get_movies', user_id=user_id))
 
 @app.route('/users/<int:user_id>/movies/<int:movie_id>/delete', methods=["POST"])
 def delete_movie_by_user_id(user_id, movie_id):
-    movies = data_manager.get_movies(user_id)
     data_manager.delete_movie(user_id, movie_id)
-    return render_template('movie.html', movies=movies)
+    return redirect(url_for('get_movies', user_id=user_id))
 
 
 
