@@ -45,7 +45,9 @@ class DataManager():
         return data
     
     def get_movies(self, user_id):
-        data = Movie.query.filter_by(user_id=user_id).all()
+        data = (Movie.query
+        .join(UserMovies, Movie.id == UserMovies.movie_id)
+        .filter_by(UserMovies.user_id == user_id).all())
         return data
     
     def add_movie(self, name, user_id):
@@ -75,8 +77,11 @@ class DataManager():
         db.session.commit()
 
 
-    def update_movie(self, movie_id, new_title):
-        data = Movie.query.filter_by(id=movie_id).first()
+    def update_movie(self, user_id, movie_id, new_title):
+        data = (Movie.query
+                .join(UserMovies, Movie.id == UserMovies.movie_id)
+                .filter_by(UserMovies.movie_id == movie_id, 
+                           UserMovies.user_id == user_id).first())
         data.name = new_title
         db.session.commit()
 
