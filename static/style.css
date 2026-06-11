@@ -55,6 +55,34 @@ nav a:hover {
     padding: 20px;
 }
 
+.user-entry {
+    list-style: none;
+    margin: 8px 0;
+    padding: 10px 14px;
+    background-color: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    transition: all 0.2s ease-in-out;
+}
+
+.user-entry a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    display: block;
+}
+
+.user-entry:hover {
+    background-color: #e9f2ff;
+    border-color: #b6d4fe;
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+}
+
+.user-entry a:hover {
+    color: #0d6efd;
+}
+
 /* Movies/User Grid */
 .user-list {
     list-style: none;

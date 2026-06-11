@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, redirect, url_for
+from flask import Flask, request, render_template, redirect, url_for, jsonify
 from data_manager import DataManager
 from models import db
 import os
@@ -31,8 +31,12 @@ def create_user():
 
 @app.route('/movies')
 def get_all_movies():
-    movies = data_manager.get_all_movies()
-    return render_template('all_movies.html', movies=movies)
+    try:
+        movies = data_manager.get_all_movies()
+        return render_template('all_movies.html', movies=movies)
+    except Exception as e:
+        app.logger.error(f"Error fetching movies: {e}")
+        return render_template('500.html'), 500
     
 @app.route('/users/<int:user_id>/movies', methods=["GET", "POST"])
 def get_movies(user_id):
@@ -57,7 +61,13 @@ def delete_movie_by_user_id(user_id, movie_id):
     data_manager.delete_movie(user_id, movie_id)
     return redirect(url_for('get_movies', user_id=user_id))
 
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
 
+@app.errorhandler(500)
+def internal_server_error(e):
+    return render_template('500.html'), 500
 
 if __name__ == "__main__":
     with app.app_context():
