@@ -55,7 +55,6 @@ class DataManager:
         return data
     
     def add_movie(self, name, user_id):
-        
         fetch_movie_details = get_movie_details(name)
         if not fetch_movie_details:
             return None
@@ -103,6 +102,7 @@ class DataManager:
                            UserMovies.user_id == user_id).first())
         data.name = new_title
         db.session.commit()
+        
 
     def delete_movie(self, user_id, movie_id):
         data = UserMovies.query.filter(
